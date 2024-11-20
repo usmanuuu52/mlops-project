@@ -2,3 +2,4 @@
     remote = myremote
 ['remote "myremote"']
     url = s3://usman52-bucket
+    region = ap-southeast-2
