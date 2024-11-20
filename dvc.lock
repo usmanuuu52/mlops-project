@@ -9,11 +9,11 @@ stages:
       size: 3607
     params:
       params.yaml:
-        data_ingestion.test_size: 0.3
+        data_ingestion.test_size: 0.2
     outs:
     - path: data/raw
       hash: md5
-      md5: 03b3b604b1f92a17191a7fc947e576d6.dir
+      md5: fb326d2eec197669f9638afde28356bf.dir
       size: 827973
       nfiles: 2
   data_preprocessing:
@@ -21,7 +21,7 @@ stages:
     deps:
     - path: data/raw
       hash: md5
-      md5: 03b3b604b1f92a17191a7fc947e576d6.dir
+      md5: fb326d2eec197669f9638afde28356bf.dir
       size: 827973
       nfiles: 2
     - path: src/data/data_preprocessing.py
@@ -31,7 +31,7 @@ stages:
     outs:
     - path: data/interim
       hash: md5
-      md5: 994c49fadcae57312a3667f2eba4dc35.dir
+      md5: c52f2290e848623bebee2a4c7bcf41e3.dir
       size: 572633
       nfiles: 2
   feature_engineering:
@@ -39,7 +39,7 @@ stages:
     deps:
     - path: data/interim
       hash: md5
-      md5: 994c49fadcae57312a3667f2eba4dc35.dir
+      md5: c52f2290e848623bebee2a4c7bcf41e3.dir
       size: 572633
       nfiles: 2
     - path: src/features/feature_engineering.py
@@ -52,19 +52,19 @@ stages:
     outs:
     - path: data/processed
       hash: md5
-      md5: a51449b40cec6b105326d9f0f9fe04f3.dir
+      md5: 8220c95a3318b060b17630000a6abb42.dir
       size: 103818916
       nfiles: 2
     - path: models/vectorizer.pkl
       hash: md5
-      md5: 5687d938acec0b4405aeb3d17599a654
-      size: 140802
+      md5: f74677ca3fa2808018c69a9d4542aa6a
+      size: 140001
   model_building:
     cmd: python src/model/model_building.py
     deps:
     - path: data/processed
       hash: md5
-      md5: a51449b40cec6b105326d9f0f9fe04f3.dir
+      md5: 8220c95a3318b060b17630000a6abb42.dir
       size: 103818916
       nfiles: 2
     - path: src/model/model_building.py
@@ -74,7 +74,7 @@ stages:
     outs:
     - path: models/model.pkl
       hash: md5
-      md5: 3bf70a54852987d6443b319602bab11e
+      md5: 4a33e351df45b5de9964df4a50b6ec26
       size: 40717
   model_evaluation:
     cmd: python src/model/model_evaluation.py
