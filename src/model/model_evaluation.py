@@ -122,6 +122,10 @@ def save_model_info(run_id: str, model_path: str, file_path: str) -> None:
 
 def main():
     mlflow.set_experiment("dvc-pipeline")
+
+    # Ensure the 'reports' directory exists
+    os.makedirs("reports", exist_ok=True)
+
     with mlflow.start_run() as run:  # Start an MLflow run
         try:
             clf = load_model("./models/model.pkl")
