@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentiment Analysis</title>
+    <style>
+        /* Basic Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Set up the background and font style */
+        body {
+            background-color: #f4f4f9; /* Light background */
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+            color: #333;
+        }
+
+        /* Container for content */
+        .container {
+            background-color: #ffffff; /* White background */
+            padding: 40px;
+            border-radius: 15px;
+            width: 80%;
+            max-width: 600px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Title Styling */
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: #3f3f3f;
+            font-weight: 600;
+        }
+
+        /* Label Styling */
+        label {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            display: block;
+            text-align: left;
+            color: #333;
+        }
+
+        /* Textarea Styling */
+        textarea {
+            width: 100%;
+            padding: 12px;
+            font-size: 1rem;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            margin-bottom: 20px;
+            resize: none;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        textarea:focus {
+            border-color: #4CAF50;
+        }
+
+        /* Submit Button Styling */
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1.2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        /* Result Styling */
+        h2 {
+            margin-top: 20px;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+
+        /* Footer Styling */
+        footer {
+            margin-top: 40px;
+            font-size: 1rem;
+            color: #555;
+        }
+
+        footer a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Image Styling */
+        .author-img {
+            width: 90px; /* Set image size */
+            height: 90px;
+            border-radius: 50%; /* Make it a circle */
+            margin-bottom: 10px;
+            border: 2px solid #4CAF50; /* Optional: Add a border around the image */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Sentiment Analysis App</h1>
+        <p>By Usman Nasir - Data Scientist</p>
+        <form action="/predict" method="POST">
+            <label for="text">Enter Text:</label><br>
+            <textarea name="text" rows="5" cols="40" id="text" placeholder="Type your text here..."></textarea><br>
+            <input type="submit" value="Predict">
+        </form>
+
+        {% if result is not none %}
+            <h2>Sentiment Result:</h2>
+            {% if result == 1 %}
+                <h2>Happy 😊</h2>
+            {% else %}
+                <h2>Sad 😞</h2>
+            {% endif %}
+        {% endif %}
+    </div>
+
+    <footer>
+        <!-- Displaying the author's image -->
+        <img src="{{ url_for('static', filename='images/usman-nasir.jpg') }}" alt="Usman Nasir" class="author-img">
+        <p>.&nbsp;&nbsp;&nbsp;&nbsp;Author: Usman Nasir | Data Scientist</p>
+        <p>.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Contact: <a href="mailto:usmankhanuuu52@gmail.com">usmankhanuuu52@gmail.com</a></p>
+    </footer>
+</body>
+</html>
