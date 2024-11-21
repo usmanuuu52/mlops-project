@@ -71,7 +71,7 @@ jobs:
         with:
           host: ${{ secrets.EC2_HOST }}
           user: ${{ secrets.EC2_USER }}
-          user: ${{ secrets.EC2_SSH_KEY }}
+          key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/emotion2:latest
             docker stop my-app || true
