@@ -67,6 +67,7 @@ jobs:
         run: |
           docker tag usman_ecr:latest 051826734860.dkr.ecr.ap-southeast-2.amazonaws.com/usman_ecr:latest
 
+
       - name: Push Docker image to AWS ECR
         if: success()
         run: |
