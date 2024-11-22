@@ -71,7 +71,7 @@ jobs:
       - name: Push Docker image to AWS ECR
         if: success()
         run: |
-          docker pull 024848456152.dkr.ecr.ap-southeast-2.amazonaws.com/usman_aws_ecr:latest
+          docker push 024848456152.dkr.ecr.ap-southeast-2.amazonaws.com/usman_aws_ecr:latest
 
       - name: Deploy to EC2
         if: success()
