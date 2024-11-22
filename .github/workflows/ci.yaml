@@ -72,3 +72,4 @@ jobs:
         run: |
           docker push 051826734860.dkr.ecr.ap-southeast-2.amazonaws.com/usman_ecr:latest
 
+
