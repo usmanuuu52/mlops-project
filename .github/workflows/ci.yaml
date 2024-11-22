@@ -77,15 +77,15 @@ jobs:
         if: success()
         uses: appleboy/ssh-action@v0.1.5
         with:
-        host: ${{ secrets.EC2_HOST }}
-        username: ${{ secrets.EC2_USER }}
-        key: ${{ secrets.EC2_SSH_KEY }}
-        script: |
-          aws configure set aws_secret_key_id ${{ secrets.AWS_SECRET_KEY_ID }}
-          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws configure set default.region ap-southeast-2
-          aws ecr get-login-password --region ap-southeast-2 | docker login --username AWS --password-stdin 024848456152.dkr.ecr.ap-southeast-2.amazonaws.com
-          docker pull 024848456152.dkr.ecr.ap-southeast-2.amazonaws.com/usman_aws_ecr:latest
-          docker stop my-app || true
-          docker rm my-app || true
-          docker run -d -p 80:5000 -e DAGSHUB_PAT=${{ secrets.DAGSHUB_PAT }} --name usman-app 024848456152.dkr.ecr.ap-southeast-2.amazonaws.com/usman_aws_ecr:latest
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            aws configure set aws_secret_key_id ${{ secrets.AWS_SECRET_KEY_ID }}
+            aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            aws configure set default.region ap-southeast-2
+            aws ecr get-login-password --region ap-southeast-2 | docker login --username AWS --password-stdin 024848456152.dkr.ecr.ap-southeast-2.amazonaws.com
+            docker pull 024848456152.dkr.ecr.ap-southeast-2.amazonaws.com/usman_aws_ecr:latest
+            docker stop my-app || true
+            docker rm my-app || true
+            docker run -d -p 80:5000 -e DAGSHUB_PAT=${{ secrets.DAGSHUB_PAT }} --name usman-app 024848456152.dkr.ecr.ap-southeast-2.amazonaws.com/usman_aws_ecr:latest
