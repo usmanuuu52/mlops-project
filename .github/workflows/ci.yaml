@@ -65,17 +65,21 @@ jobs:
         if: success()
         run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/emotion2:latest
 
-      - name: deploy to ec2
+      - name: Deploy to EC2
         if: success()
-        uses: appleboy/ssh-action@v0.1.5
+        uses: appleboy/ssh-action@v0.1.8
         with:
-          host: ${{ secrets.EC2_HOST }}
-          user: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
-            docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/emotion2:latest
-            docker stop my-app || true
-            docker rm my-app || true
-            docker run -p 80:5000 --name my-app \
-              -e DAGSHUB_PAT=${{ secrets.DAGSHUB_PAT }} \
-              ${{ secrets.DOCKER_HUB_USERNAME }}/emotion2:latest
+        host: ${{ secrets.EC2_HOST }}
+        user: ${{ secrets.EC2_USER }}
+        key: ${{ secrets.EC2_SSH_KEY }}
+        script: |
+          echo "Pulling the latest Docker image..."
+          docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/emotion2:latest
+          echo "Stopping the current container if it exists..."
+          docker stop my-app || true
+          docker rm my-app || true
+          echo "Starting a new container..."
+          docker run -p 80:5000 --name my-app \
+            -e DAGSHUB_PAT=${{ secrets.DAGSHUB_PAT }} \
+            ${{ secrets.DOCKER_HUB_USERNAME }}/emotion2:latest
+          echo "Deployment to EC2 complete."
