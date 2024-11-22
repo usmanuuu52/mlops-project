@@ -1,4 +1,5 @@
-name: CI pipeline
+name: CI Pipeline
+
 on: push
 
 jobs:
@@ -12,7 +13,7 @@ jobs:
       - name: setup python
         uses: actions/setup-python@v2
         with:
-          python-version: "3.10"
+          python-version: '3.10'
 
       - name: Cache pip dependencies
         uses: actions/cache@v3
@@ -21,7 +22,7 @@ jobs:
           key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
           restore-keys: |
             ${{ runner.os }}-pip-
-        
+
       - name: install dependencies
         run: |
           pip install -r requirements.txt
@@ -60,32 +61,43 @@ jobs:
       - name: Build Docker image
         if: success()
         run: |
-          docker build -t usman_ecr .
+          docker build -t campusx_ecr .
 
       - name: Tag Docker image
         if: success()
         run: |
-          docker tag usman_ecr:latest 051826734860.dkr.ecr.ap-southeast-2.amazonaws.com/usman_ecr:latest
+          docker tag campusx_ecr:latest 051826734860.dkr.ecr.ap-southeast-2.amazonaws.com/campusx_ecr:latest
 
       - name: Push Docker image to AWS ECR
         if: success()
         run: |
-          docker push 051826734860.dkr.ecr.ap-southeast-2.amazonaws.com/usman_ecr:latest
+          docker push 051826734860.dkr.ecr.ap-southeast-2.amazonaws.com/campusx_ecr:latest
 
-      - name: Deploy to EC2
+      # Zip the required files
+      - name: Zip files for deployment
         if: success()
-        uses: appleboy/ssh-action@v0.1.5
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
-            aws configure set aws_secret_key_id ${{ secrets.AWS_SECREY_KEY_ID }}
-            aws configure set aws_secret_access_key ${{ secrets.AWS_SECREY_ACCESS_KEY }}
-            aws configure set default.region ap-southeast-2
-            aws ecr get-login-password --region ap-southeast-2 | docker login --username AWS --password-stdin 024848456152.dkr.ecr.ap-southeast-2.amazonaws.com
-            docker pull 024848456152.dkr.ecr.ap-southeast-2.amazonaws.com/usman_ecr:latest
-            docker stop my-app || true
-            docker rm my-app || true
-            docker run -d -p 80:5000 -e DAGSHUB_PAT=${{ secrets.DAGSHUB_PAT }} --name campusx-app 024848456152.dkr.ecr.ap-southeast-2.amazonaws.com/usman_ecr:latest
+        run: |
+          zip -r deployment.zip appspec.yml deploy/scripts/install_dependencies.sh deploy/scripts/start_docker.sh
 
+      # Upload the ZIP file to S3
+      - name: Upload ZIP to S3
+        if: success()
+        run: |
+          aws s3 cp deployment.zip s3://campusxcodedeploybucket/deployment.zip
+
+      # Deploy to AWS CodeDeploy using the uploaded ZIP file
+      - name: Deploy to AWS CodeDeploy
+        if: success()
+        run: |
+          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws deploy create-deployment \
+            --application-name MyDockerApp2 \
+            --deployment-config-name CodeDeployDefault.OneAtATime \
+            --deployment-group-name MyDockerAppASGDeploymentGroup \
+            --s3-location bucket=campusxcodedeploybucket,key=deployment.zip,bundleType=zip \
+            --file-exists-behavior OVERWRITE \
+            --region ap-southeast-2
+
+
+      
