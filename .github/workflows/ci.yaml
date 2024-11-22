@@ -88,3 +88,4 @@ jobs:
             docker stop my-app || true
             docker rm my-app || true
             docker run -d -p 80:5000 -e DAGSHUB_PAT=${{ secrets.DAGSHUB_PAT }} --name campusx-app 024848456152.dkr.ecr.ap-southeast-2.amazonaws.com/usman_ecr:latest
+
